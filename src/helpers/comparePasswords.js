@@ -1,6 +1,9 @@
 const bcrypt = require("bcrypt");
 const comparePasswords = async (password, accountPassword) => {
-  return await bcrypt.compare(password, accountPassword);
+  const result =  await bcrypt.compare(password, accountPassword);
+ 
+  return result
+  // const isPasswordMatch = await bcrypt.compare(password, user.password)
 };
 const saltPassword = async (newPassword) => {
   const salt = await bcrypt.genSalt(11);

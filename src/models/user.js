@@ -12,7 +12,6 @@ const userSchema = mongoose.Schema({
      password : {
           type: String,
           required : true,
-          select : false
      },
      image : {
           type: String,
@@ -20,18 +19,13 @@ const userSchema = mongoose.Schema({
      }
 }, {timestamps:true});
 
-userSchema.set("toJSON", {
-  transform: function (doc, ret, opt) {
-    // ret["id"] = ret["_id"];
-    delete ret["password"];
-    delete ret["__v"];
-    return ret;
-  },
-});
+// userSchema.set("toJSON", {
+//   transform: function (doc, ret, opt) {
+//     // ret["id"] = ret["_id"];
+//     delete ret["password"];
+//     delete ret["__v"];
+//     return ret;
+//   },
+// });
 
 module.exports = mongoose.model("User", userSchema);
-// const profileSchema = new Schema({
-   
-// },{timestamps : true});
-
-// module.exports = model('profile',profileSchema);

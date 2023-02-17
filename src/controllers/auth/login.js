@@ -1,4 +1,6 @@
 const { comparePasswords } = require("../../helpers/comparePasswords");
+const bcrypt = require('bcrypt');
+
 const findUser = require("../../helpers/findUser");
 const assigneToken = require("../../middleware/assignToken");
 
@@ -16,17 +18,17 @@ const login = async (req, res, next) => {
       return res.status(403).send({ error: incorrect_email_password });
     }
 
-    //Compare Passwords using comparePassword helper
-    const validPass = comparePasswords(password, user.password);
+    // Compare Passwords using comparePassword helper
+    const validPass = await comparePasswords(password, user.password);
     if (!validPass) {
       return res.status(403).send({ error: incorrect_email_password });
     }
     
     const token = assigneToken.generateToken({ user, expire: "5d" });
-    user.save();
-    return res.status(200).send({ token, user });
+    return res.status(200).send({ token,   user });
+  
   } catch (e) {
-    console.log(e);
+    console.log("error occurred", e);
     return next(e);
   }
 };
