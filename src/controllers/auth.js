@@ -1,10 +1,15 @@
-
+const formidable = require("formidable");
 const userController = {};
 
 userController.register = (req, res, next) => {
-  console.log('res', req.body);
-  res.send({
-    message: "sign up"
+  const form = formidable();
+  form.parse(req, async (err, fileds, files) => {
+    console.log("res", fileds);
+    console.log("res", files);
+    // console.log(`files JSON: ${JSON.stringify(files)}`);
+    res.send({
+      message: "sign up",
+    });
   });
 };
 
