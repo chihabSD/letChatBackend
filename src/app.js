@@ -3,8 +3,10 @@ const mongoose = require("mongoose");
 const logger = require("morgan");
 const bodyParser = require("body-parser");
 const cors = require('cors');
+const fs = require('fs')
+const path = require('path')
 //use api v1
-const auth = require("./routes/auth");
+// const auth = require("./routes/auth");
 
 
 
@@ -36,6 +38,7 @@ app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // -------- Routes ------//
-app.use("/auth", auth); // any request fall under the prefix /ai/v2 go to v1 and deal with it
+const dirPath = path.resolve(__dirname, './routes')
+fs.readdirSync(dirPath).map((r) => app.use('/api', require('./routes/'+r)))
 
 module.exports = app;
