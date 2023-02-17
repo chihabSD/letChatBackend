@@ -2,6 +2,8 @@ const formidable = require("formidable");
 const validator = require("validator");
 const fs = require("fs");
 const path = require("path");
+const User = require("../../models/user");
+const bcrypt = require("bcrypt");
 const register = async (req, res, next) => {
   const form = formidable();
   form.parse(req, async (err, fileds, files) => {
@@ -46,20 +48,43 @@ const register = async (req, res, next) => {
         __dirname,
         `/../../../images/${files.image.originalFilename}`
       );
+
+      //   fs.copyFile(files.image.filepath, newPath, (error) => {
+      //     if (error) {
+      //       console.log(newPath);
+      //       // console.log(error);
+      //     } else {
+      //       console.log(newPath);
+      //     //   console.log("image upload sucess");
+      //     }
+      //   });
+      // console.log(newPath);
+      try {
+        const check = await User.findOne({ email });
+        if (check) 
+          return res.status(400).json({
+            message:
+              "This email address already exists,try with a different email address",
+          });
+       
+        const cryptedPassword = await bcrypt.hash(password, 12);
+        fs.copyFile(files.image.filepath, newPath, async (error) => {
+          if (error) {
+            console.log(newPath);
+            // console.log(error);
+          } else {
+            const user = await new User({
+              username,
+              email,
+              password: cryptedPassword,
+              image: files.image.originalFilename,
+            }).save();
+
+            return res.status(200).send({ user });
+          }
+        });
+      } catch (error) {}
     
-    //   fs.copyFile(files.image.filepath, newPath, (error) => {
-    //     if (error) {
-    //       console.log(newPath);
-    //       // console.log(error);
-    //     } else {
-    //       console.log(newPath);
-    //     //   console.log("image upload sucess");
-    //     }
-    //   });
-        console.log(newPath);
-      res.send({
-        message: getImageName,
-      });
     }
   });
 };

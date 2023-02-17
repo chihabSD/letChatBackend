@@ -17,7 +17,7 @@ app.use(cors());
 
 // go to process.env and get the mongo url
 mongoose.set("strictQuery", false)
-mongoose.connect(process.env.MONGO_DB_URL ||  "mongodb://localhost:27017/myride", {
+mongoose.connect(process.env.MONGO_DB_URL ||  "mongodb://localhost:27017/letsChat", {
   useNewUrlParser: true,
   
 });
