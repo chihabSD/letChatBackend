@@ -5,8 +5,7 @@ const bodyParser = require("body-parser");
 const cors = require('cors');
 const fs = require('fs')
 const path = require('path')
-//use api v1
-// const auth = require("./routes/auth");
+
 
 
 
@@ -14,8 +13,6 @@ const app = express();
 app.use(cors());
 
 // -------- DB Config ------//
-
-// go to process.env and get the mongo url
 mongoose.set("strictQuery", false)
 mongoose.connect(process.env.MONGO_DB_URL ||  "mongodb://localhost:27017/letsChat", {
   useNewUrlParser: true,
@@ -36,7 +33,8 @@ mongoose.connection.on("error", err => {
 // -------- Middlewares------//
 app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(express.static(__dirname + '/images'));
+
+
 // -------- Routes ------//
 const dirPath = path.resolve(__dirname, './routes')
 fs.readdirSync(dirPath).map((r) => app.use('/api', require('./routes/'+r)))
