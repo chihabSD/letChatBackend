@@ -1,6 +1,7 @@
 const formidable = require("formidable");
 const validator = require("validator");
-
+const fs = require("fs");
+const path = require("path");
 const register = async (req, res, next) => {
   const form = formidable();
   form.parse(req, async (err, fileds, files) => {
@@ -37,6 +38,25 @@ const register = async (req, res, next) => {
       res.status(400).json({ error: { errorMessage: error } });
     } else {
       const getImageName = files.image.originalFilename;
+      const randomNumber = Math.floor(Math.random() * 99999);
+      const newImageName = randomNumber + getImageName;
+      files.image.originalFilename = newImageName;
+
+      const newPath = path.join(
+        __dirname,
+        `/../../../images/${files.image.originalFilename}`
+      );
+    
+    //   fs.copyFile(files.image.filepath, newPath, (error) => {
+    //     if (error) {
+    //       console.log(newPath);
+    //       // console.log(error);
+    //     } else {
+    //       console.log(newPath);
+    //     //   console.log("image upload sucess");
+    //     }
+    //   });
+        console.log(newPath);
       res.send({
         message: getImageName,
       });

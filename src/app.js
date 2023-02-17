@@ -36,7 +36,7 @@ mongoose.connection.on("error", err => {
 // -------- Middlewares------//
 app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
-
+// app.use(express.static(__dirname + '/images'));
 // -------- Routes ------//
 const dirPath = path.resolve(__dirname, './routes')
 fs.readdirSync(dirPath).map((r) => app.use('/api', require('./routes/'+r)))
