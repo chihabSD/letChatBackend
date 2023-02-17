@@ -1,53 +1,17 @@
 const formidable = require("formidable");
-const Joi = require("@hapi/joi");
 const fs = require("fs");
 const path = require("path");
 const User = require("../../models/user");
 const bcrypt = require("bcrypt");
+const validateRegister = require("../../validations/register");
+const findUser = require("../../helpers/findUser");
 const register = async (req, res, next) => {
   const form = formidable();
   form.parse(req, async (err, fileds, files) => {
     const { username, email, password, confirmPassword } = fileds;
     const error = [];
-    const schema = Joi.object()
-      .keys({
-        username: Joi.string()
-          .required()
-          .empty()
-          .min(5)
-          .max(20)
-          .error((errors) => {
-            errors.forEach((err) => {
-              switch (err.code) {
-                case "string.empty":
-                  err.message = "Username is required";
-                  break;
-                case "string.required":
-                  err.message = "Username is required";
-                  break;
-                case "string.min":
-                  err.message = "Username must be at least 5 characters long";
-                  break;
 
-                case "string.max":
-                  err.message = "Username cannot be empty";
-                  break;
-              }
-            });
-            return errors;
-          }),
-        email: Joi.string().min(6).required().email(),
-
-        password: Joi.string().min(3).max(15).required().label("Password"),
-        confirmPassword: Joi.any()
-          .equal(Joi.ref("password"))
-          .required()
-          .label("Confirm password")
-          .options({ messages: { "any.only": "{{#label}} does not match" } }),
-      })
-      .options({ allowUnknown: true });
-
-    const Validation = schema.validate(fileds);
+    const Validation = await validateRegister(fileds);
 
     if (Validation.error) {
       return res
@@ -56,10 +20,10 @@ const register = async (req, res, next) => {
     }
 
     if (Object.keys(files).length === 0) {
-       error.push("Please provide your profile photo");
+      error.push("Please provide your profile photo");
     }
     if (error.length > 0) {
-        console.log('error length');
+      console.log("error length");
       res.status(400).json({ message: error[0] });
     } else {
       const getImageName = files.image.originalFilename;
@@ -73,7 +37,7 @@ const register = async (req, res, next) => {
       );
 
       try {
-        const check = await User.findOne({ email });
+        const check = await findUser(email);
         if (check)
           return res.status(400).json({
             message:
