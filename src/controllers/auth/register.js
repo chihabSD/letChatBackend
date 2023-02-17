@@ -1,5 +1,5 @@
 const formidable = require("formidable");
-const validator = require("validator");
+const Joi = require("@hapi/joi");
 const fs = require("fs");
 const path = require("path");
 const User = require("../../models/user");
@@ -7,37 +7,60 @@ const bcrypt = require("bcrypt");
 const register = async (req, res, next) => {
   const form = formidable();
   form.parse(req, async (err, fileds, files) => {
-    // validate fields
     const { username, email, password, confirmPassword } = fileds;
-    const { image } = files;
     const error = [];
+    const schema = Joi.object()
+      .keys({
+        username: Joi.string()
+          .required()
+          .empty()
+          .min(5)
+          .max(20)
+          .error((errors) => {
+            errors.forEach((err) => {
+              switch (err.code) {
+                case "string.empty":
+                  err.message = "Username is required";
+                  break;
+                case "string.required":
+                  err.message = "Username is required";
+                  break;
+                case "string.min":
+                  err.message = "Username must be at least 5 characters long";
+                  break;
 
-    if (!username) {
-      error.push("Please provide your user name");
+                case "string.max":
+                  err.message = "Username cannot be empty";
+                  break;
+              }
+            });
+            return errors;
+          }),
+        email: Joi.string().min(6).required().email(),
+
+        password: Joi.string().min(3).max(15).required().label("Password"),
+        confirmPassword: Joi.any()
+          .equal(Joi.ref("password"))
+          .required()
+          .label("Confirm password")
+          .options({ messages: { "any.only": "{{#label}} does not match" } }),
+      })
+      .options({ allowUnknown: true });
+
+    const Validation = schema.validate(fileds);
+
+    if (Validation.error) {
+      return res
+        .status(403)
+        .send({ message: Validation.error.details[0].message });
     }
-    if (!email) {
-      error.push("Please provide your Email");
-    }
-    if (email && !validator.isEmail(email)) {
-      error.push("This is not valid email");
-    }
-    if (!password) {
-      error.push("Please provide your password");
-    }
-    if (!confirmPassword) {
-      error.push("Please confirm your password");
-    }
-    if (password && confirmPassword && password !== confirmPassword) {
-      error.push("Password does not match");
-    }
-    if (password && password.length < 6) {
-      error.push("Password is too short");
-    }
+
     if (Object.keys(files).length === 0) {
-      error.push("Please provide your profile photo");
+       error.push("Please provide your profile photo");
     }
     if (error.length > 0) {
-      res.status(400).json({ error: { errorMessage: error } });
+        console.log('error length');
+      res.status(400).json({ message: error[0] });
     } else {
       const getImageName = files.image.originalFilename;
       const randomNumber = Math.floor(Math.random() * 99999);
@@ -49,29 +72,18 @@ const register = async (req, res, next) => {
         `/../../../images/${files.image.originalFilename}`
       );
 
-      //   fs.copyFile(files.image.filepath, newPath, (error) => {
-      //     if (error) {
-      //       console.log(newPath);
-      //       // console.log(error);
-      //     } else {
-      //       console.log(newPath);
-      //     //   console.log("image upload sucess");
-      //     }
-      //   });
-      // console.log(newPath);
       try {
         const check = await User.findOne({ email });
-        if (check) 
+        if (check)
           return res.status(400).json({
             message:
               "This email address already exists,try with a different email address",
           });
-       
+
         const cryptedPassword = await bcrypt.hash(password, 12);
         fs.copyFile(files.image.filepath, newPath, async (error) => {
           if (error) {
             console.log(newPath);
-            // console.log(error);
           } else {
             const user = await new User({
               username,
@@ -84,7 +96,6 @@ const register = async (req, res, next) => {
           }
         });
       } catch (error) {}
-    
     }
   });
 };
