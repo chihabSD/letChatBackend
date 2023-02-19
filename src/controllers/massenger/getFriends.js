@@ -2,9 +2,10 @@ const User = require("../../models/user");
 const getFriends = async (req, res) => {
   try {
       const friends = await User.find({}).select('-password')
-      return res.status(200).send({ friends });
+      const currentUser = req.user.user
+      const filter = friends.filter( user => user._id != currentUser._id)
+      return res.status(200).send({ friends : filter});
   } catch (e) {
-      // return res.status(500).send({ message:erro });
       console.log(e);
   }
 };
