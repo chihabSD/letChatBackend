@@ -37,6 +37,8 @@ app.use(bodyParser.json());
 
 
 // -------- Routes ------//
+app.use(express.static('public')); 
+app.use('/images', express.static('images'));
 const dirPath = path.resolve(__dirname, './routes')
 fs.readdirSync(dirPath).map((r) => app.use('/api', require('./routes/'+r)))
 
