@@ -10,7 +10,6 @@ const getMessage = async (req, res) => {
         (message.receiverId == senderId && message.senderId == fdId)
     );
 
-    console.log(getAllMessages);
     return res.status(200).send({ messages: getAllMessages });
   } catch (e) {
     console.log(e);
