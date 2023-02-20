@@ -1,12 +1,22 @@
-const User = require("../../models/user");
+const Message = require("../../models/message");
 const sendMessage = async (req, res) => {
+  const senderId = req.user.user._id;
+  const { senderName, receiverId, message } = req.body;
   try {
-    //   const friends = await User.find({}).select('-password')
-    //   const currentUser = req.user.user
-    //   const filter = friends.filter( user => user._id != currentUser._id)
-      return res.status(200).send({ friends : req.body});
+    const insertMessage = await Message.create({
+      senderName,
+      senderId,
+      message: {
+        text: message,
+        image: "",
+      },
+      receiverId,
+    });
+
+
+    return res.status(200).send({ message:insertMessage });
   } catch (e) {
-      console.log(e);
+    console.log(e);
   }
 };
 
