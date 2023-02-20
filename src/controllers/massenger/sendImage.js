@@ -38,7 +38,6 @@ const sendImage = async (req, res) => {
       });
 
     });
-    // return res.status(200).send({ message: "null" });
   } catch (e) {
     console.log(e);
   }
