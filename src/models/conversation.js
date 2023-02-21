@@ -7,16 +7,12 @@ const conversationSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref:'User'
   }],
-    senderId: {
+    startBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
       },
-      receiverId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-      },
+      
       latestMessage: {
         type: mongoose.Schema.Types.ObjectId,
         ref:'Message', 

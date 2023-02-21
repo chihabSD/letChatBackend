@@ -1,6 +1,6 @@
 const Conversation = require("../../models/conversation");
 
-const getChatsList = async (req, res) => {
+const getConversation = async (req, res) => {
   const senderId = req.user.user._id;
   try {
     const chats = await Conversation.find({})
@@ -10,4 +10,4 @@ const getChatsList = async (req, res) => {
   }
 };
 
-module.exports = getChatsList;
+module.exports = getConversation;

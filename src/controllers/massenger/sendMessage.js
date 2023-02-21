@@ -1,7 +1,7 @@
 const Message = require("../../models/message");
 const sendMessage = async (req, res) => {
   const senderId = req.user.user._id;
-  const { senderName, receiverId, message } = req.body;
+  const { senderName,conversationId,  receiverId, message } = req.body;
   try {
     const insertMessage = await Message.create({
       senderName,
@@ -11,6 +11,7 @@ const sendMessage = async (req, res) => {
         image: "",
       },
       receiverId,
+      conversationId
     });
 
 

@@ -9,6 +9,7 @@ const addToChatList = async (req, res) => {
       const chats = await new Conversation({
         senderId,
         receiverId,
+        startBy:senderId
       });
       chats.users.push(senderId, receiverId);
       chats.save();
