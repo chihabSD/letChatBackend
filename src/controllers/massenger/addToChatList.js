@@ -1,12 +1,12 @@
-const Chat = require("../../models/chat");
+const Conversation = require("../../models/conversation");
 const addToChatList = async (req, res) => {
   const senderId = req.user.user._id;
 
   const { receiverId } = req.body;
   try {
-    const chats = await Chat.find({ users: [senderId, receiverId] });
+    const chats = await Conversation.find({ users: [senderId, receiverId] });
     if (chats === undefined || chats.length == 0) {
-      const chats = await new Chat({
+      const chats = await new Conversation({
         senderId,
         receiverId,
       });

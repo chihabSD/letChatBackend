@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const chatSchema = mongoose.Schema(
+const conversationSchema = mongoose.Schema(
   {
 
     users:[{
@@ -34,7 +34,7 @@ const chatSchema = mongoose.Schema(
 //   },
 // });
 
-module.exports = mongoose.model("Chat", chatSchema);
+module.exports = mongoose.model("Conversation", conversationSchema);
 
 // const mongoose = require("mongoose");
 
