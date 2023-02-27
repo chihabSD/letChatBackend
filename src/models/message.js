@@ -7,40 +7,47 @@ const messageSchema = mongoose.Schema(
       ref: "User",
       required: true,
     },
-    
+
     receiverId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
+    imageUrl: {
+      type: String,
+    },
     message: {
-      text: {
-        type: String,
-      },
-      image: {
-        type: String,
-        default: "",
-      },
+      type: String,
+      default: "",
     },
     status: {
-      type: String,
-      default: "unseen",
+      type: Boolean, 
+      default: false
     },
     conversationId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Conversation",
     },
+
+    delivered: {
+      
+      type: Boolean,
+      default: false,
+    },
+
+    type: {
+      type: String,
+      enum: ["text", "image"],
+      default: "text",
+    },
+    reaction: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
 
-// messageSchema.set("toJSON", {
-//   transform: function (doc, ret, opt) {
-//     // ret["id"] = ret["_id"];
-//     delete ret["password"];
-//     delete ret["__v"];
-//     return ret;
-//   },
-// });
 
 module.exports = mongoose.model("Message", messageSchema);
+
+
