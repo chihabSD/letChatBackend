@@ -21,8 +21,8 @@ const messageSchema = mongoose.Schema(
       default: "",
     },
     status: {
-      type: Boolean, 
-      default: false
+      type: Boolean,
+      default: false,
     },
     conversationId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -30,7 +30,6 @@ const messageSchema = mongoose.Schema(
     },
 
     delivered: {
-      
       type: Boolean,
       default: false,
     },
@@ -40,14 +39,32 @@ const messageSchema = mongoose.Schema(
       enum: ["text", "image"],
       default: "text",
     },
-    reaction: {
-      type: String,
+    reactions: {
+      reactions: [
+        {
+          by: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+          reaction: { type: String, default: "" },
+        },
+      ],
     },
+    // reactions: {
+    //   reactions :[
+    //     by:{}
+    //   ]
+    //   reactedBy: [
+    //     {
+    // type: mongoose.Schema.Types.ObjectId,
+    // ref: "User",
+    //     },
+    //   ],
+    //   reactionType: {
+    //     reactions:[{ type: String,
+    //       default: "",}]
+
+    //   },
+    // },
   },
   { timestamps: true }
 );
 
-
 module.exports = mongoose.model("Message", messageSchema);
-
-
