@@ -1,59 +1,78 @@
 const Message = require("../../models/message");
 const { ObjectId } = require("mongodb");
 const reactToMessage = async (req, res) => {
-  const { reaction, reactedBy } = req.body;
-  //   messageId:message._id, reactedBy:_id , reaction:emoji
-  const _id = ObjectId(req.params.messageId);
-  console.log(req.params.messageId);
-  //   reaction: {
-  //     reactedBy: [
-  //       {
-  //         type: mongoose.Schema.Types.ObjectId,
-  //         ref: "User",
-  //       },
-  //     ],
-  //     reactionType: {
-  //       type: String,
-  //       default: "text",
-  //     },
-  //   },
+  const {
+    Types: { ObjectId: ObjectId },
+  } = require("mongoose");
+
+  const { reaction, reactionId, reactedBy, current, replace } = req.body;
+  const id = ObjectId(reactionId);
 
   try {
-    // insert new react for user
-    // if user exist with a reactionn and update new reaction
 
-    const message = await Message.findOne({ _id: req.params.messageId });
+    // Get data after update
+    const getData = async () => {
+      const message = await Message.findOne({
+        _id: req.params.messageId,
+      }).populate("reactions.reactions.by");
+      console.log(message.reactions);
+      return res.status(200).send({ message });
+    };
+    const message = await Message.findOne({
+      _id: req.params.messageId,
+    }).populate("reactions.reactions.by");
 
-    // find user with reaction
-    // if user wants to change
-   const userFound =  message.reactions.reactions.find(user => user.by == reactedBy);
-   if (userFound) {
-    console.log(userFound);
-    return res.status(200).send({ message });
-  } else {
-    message.reactions.reactions.push({ by: reactedBy, reaction });
-    message.save();
 
-    // let messages = await Message.find({conversationId}).populate('conversationId').populate('senderId').populate('receiverId');
+     // Remove curren treaaction
+    if (current && !replace) {
+      console.log("current but not replace");
 
-    // getAllMessages = getAllMessages.filter(
-    //   (message) =>
-    //     (message.senderId == senderId && message.receiverId == fdId) ||
-    //     (message.receiverId == senderId && message.senderId == fdId)
-    // );
-    // return res.status(200).send({ messages });
-    return res.status(200).send({ message });
-  }
+      const newS = message.reactions.reactions.filter((reaction) => {
+        return reaction.by._id != reactedBy;
+      });
+      message.reactions.reactions = [...newS];
 
-    // console.log(message.reactions);
-    // message.save()
-    // await Message.findOne({_id}).then((err, message) => {
-    //     if(err){
+      message.save((err, result) => {
+        if (err) return console.log(err);
+        if (result) return getData();
+      });
+      
+      return;
+    }
 
-    //     console.log(err);
-    //     return res.status(400).send({ err });
-    //     }
-    // })
+    // replace current reaction
+    if (current && replace) {
+      let newObject = {
+        _id: id,
+        by: reactedBy,
+        reaction,
+      };
+      const oldMessage = message.reactions.reactions.filter((reaction) => {
+        return reaction.by._id != reactedBy;
+      });
+
+      message.reactions.reactions = [...oldMessage];
+      message.reactions.reactions.push(newObject);
+      message.save((err, result) => {
+        if (err) return console.log(err);
+        if (result) return getData();
+      });
+
+      return;
+    }
+
+    // Insert new Item 
+    if (!current && !replace) {
+      message.reactions.reactions.push({ by: reactedBy, reaction });
+      message.save((err, result) => {
+        if (err) return console.log(err);
+        if (result) return getData();
+      });
+
+      return;
+    }
+
+    
   } catch (e) {
     console.log(e);
   }

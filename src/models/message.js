@@ -39,6 +39,10 @@ const messageSchema = mongoose.Schema(
       enum: ["text", "image"],
       default: "text",
     },
+    deletedBy:[{
+      type: mongoose.Schema.Types.ObjectId,
+      ref:'User'
+  }],
     reactions: {
       reactions: [
         {

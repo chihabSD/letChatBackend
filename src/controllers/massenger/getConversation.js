@@ -10,14 +10,8 @@ const getConversation = async (req, res) => {
     
     // get all messages associated with the conversation Id
     let messagesForFirstConversation = await Message.find({conversationId:chats[0]._id})
-    let messages = await Message.find({conversationId:chats[0]._id}).populate('conversationId').populate('senderId').populate('receiverId');
-    // let messages = await Message.find({senderId}).populate('conversationId').populate('senderId').populate('receiverId');
-    // let receiverId  = await Message.find({senderId}).populate('conversationId').populate('senderId').populate('receiverId');
- 
-    // find message for current user
-    // get all message for chat
-
-      let sortedMessages = []
+    let messages = await Message.find({conversationId:chats[0]._id}).populate('conversationId').populate('senderId').populate('receiverId').populate('reactions.reactions.by');
+          let sortedMessages = []
       messages.find(message => {
         if(message.conversationId.equals(chats[0]._id)) {
 
