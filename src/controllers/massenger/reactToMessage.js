@@ -15,7 +15,7 @@ const reactToMessage = async (req, res) => {
       const message = await Message.findOne({
         _id: req.params.messageId,
       }).populate("reactions.reactions.by");
-      console.log(message.reactions);
+ 
       return res.status(200).send({ message });
     };
     const message = await Message.findOne({

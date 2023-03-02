@@ -28,7 +28,10 @@ const messageSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Conversation",
     },
-
+    contentType: {
+      type: String,
+      default: "message",
+    },
     delivered: {
       type: Boolean,
       default: false,
@@ -39,10 +42,12 @@ const messageSchema = mongoose.Schema(
       enum: ["text", "image"],
       default: "text",
     },
-    deletedBy:[{
-      type: mongoose.Schema.Types.ObjectId,
-      ref:'User'
-  }],
+    deletedBy: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     reactions: {
       reactions: [
         {
