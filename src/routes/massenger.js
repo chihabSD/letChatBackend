@@ -17,6 +17,6 @@ router.get("/messanger/get-chatlist", verifyToken, getConversation);
 
 // REPLIES
 router.post("/messanger/reply-to-message/:messageId", verifyToken, replyToMessage);
-router.delete("/messanger/delete-message/:messageId", verifyToken,deleteMessage);
+router.put("/messanger/delete-message/:messageId", verifyToken,deleteMessage);
 module.exports = router;
 
