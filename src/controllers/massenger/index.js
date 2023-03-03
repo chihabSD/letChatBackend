@@ -1,4 +1,5 @@
 const addToChatList = require("./addToChatList");
+const deleteMessage = require("./deleteMessage");
 const getConversation = require("./getConversation");
 const getFriends = require("./getFriends");
 const getMessage = require("./getMessage");
@@ -13,7 +14,7 @@ module.exports = {
   getMessage,
   sendImage,
   addToChatList,
-
+  deleteMessage,
   replyToMessage,
   getConversation,
   reactToMessage,

@@ -42,12 +42,15 @@ const messageSchema = mongoose.Schema(
       enum: ["text", "image"],
       default: "text",
     },
+
     deletedBy: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        by: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        on:  {type: Date, default: Date.now},
       },
     ],
+
+
     reactions: {
       reactions: [
         {
@@ -56,22 +59,7 @@ const messageSchema = mongoose.Schema(
         },
       ],
     },
-    // reactions: {
-    //   reactions :[
-    //     by:{}
-    //   ]
-    //   reactedBy: [
-    //     {
-    // type: mongoose.Schema.Types.ObjectId,
-    // ref: "User",
-    //     },
-    //   ],
-    //   reactionType: {
-    //     reactions:[{ type: String,
-    //       default: "",}]
 
-    //   },
-    // },
   },
   { timestamps: true }
 );

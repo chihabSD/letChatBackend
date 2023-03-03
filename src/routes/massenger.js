@@ -1,5 +1,5 @@
 const express = require("express");
-const { getFriends, sendMessage, getMessage, sendImage, addToChatList,  getConversation, reactToMessage, replyToMessage } = require("../controllers/massenger");
+const { getFriends, sendMessage, getMessage, sendImage, addToChatList,  getConversation, reactToMessage, replyToMessage, deleteMessage } = require("../controllers/massenger");
 
 const verifyToken = require("../middleware/verifyToken");
 
@@ -17,5 +17,6 @@ router.get("/messanger/get-chatlist", verifyToken, getConversation);
 
 // REPLIES
 router.post("/messanger/reply-to-message/:messageId", verifyToken, replyToMessage);
+router.delete("/messanger/delete-message/:messageId", verifyToken,deleteMessage);
 module.exports = router;
 
