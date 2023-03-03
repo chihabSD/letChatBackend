@@ -45,11 +45,7 @@ const getConversation = async (req, res) => {
 
       let replies = await Reply.find({}).populate({path:'messageId', populate:{path:'receiverId'}}).populate('senderId')
 
-      // let oldMessages = messages
-      // replies.map(r => {
-      //   oldMessages.push(r)
-      // })
-      // console.log(replies);
+     
 
     return res.status(200).send({ chats, messages, replies});
   } catch (e) {
