@@ -7,6 +7,10 @@ const replySchema = mongoose.Schema(
       ref: "Message",
       required: true,
     },
+    conversationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Conversation",
+    },
     contentType: {
       type: String,
       default: "reply",

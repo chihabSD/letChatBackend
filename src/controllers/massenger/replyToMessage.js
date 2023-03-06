@@ -1,7 +1,7 @@
 const Reply = require("../../models/reply");
 const replyToMessage = async (req, res) => {
   const senderId = req.user.user._id;
-  const { message, messageId, type, imageUrl } = req.body;
+  const { message,  conversationId,  messageId, type, imageUrl } = req.body;
   try {
     const getReply = async (_id) => {
       
@@ -12,6 +12,7 @@ const replyToMessage = async (req, res) => {
     senderId,
     message,
     messageId,
+    conversationId
    })
 
 
@@ -20,7 +21,7 @@ if(saved) {
   const reply = await Reply.findOne({
     _id: newReply._id,
   }).populate({ path: "messageId", populate: { path: "receiverId" } })
-    .populate("senderId");
+    .populate("senderId").populate('conversationId');
 
   return res.status(200).send({ message: reply });
 }

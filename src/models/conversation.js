@@ -13,6 +13,19 @@ const conversationSchema = mongoose.Schema(
         ref: "User",
       },
     ],
+    groupPic: {
+      type:String, 
+    }, 
+    groupName: {
+      type:String, 
+    }, 
+    admins: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+
     startBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
