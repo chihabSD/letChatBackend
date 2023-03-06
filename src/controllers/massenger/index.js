@@ -1,5 +1,6 @@
 const addToChatList = require("./addToChatList");
 const deleteMessage = require("./deleteMessage");
+const findUserByUserName = require("./findUser");
 const getConversation = require("./getConversation");
 const getFriends = require("./getFriends");
 const getMessage = require("./getMessage");
@@ -18,4 +19,5 @@ module.exports = {
   replyToMessage,
   getConversation,
   reactToMessage,
+  findUserByUserName
 };
