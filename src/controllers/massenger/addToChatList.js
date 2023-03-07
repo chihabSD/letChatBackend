@@ -12,8 +12,8 @@ const addToChatList = async (req, res) => {
         startBy: senderId,
       });
 
-      group.users.push(senderId);
-      group.admins.push(senderId);
+      group.users.unshift(senderId);
+      group.admins.unshift(senderId);
       const saved = await group.save();
       if (saved) {
         const chat = await Conversation.findOne({ _id: saved._id })
@@ -21,7 +21,6 @@ const addToChatList = async (req, res) => {
           .populate("latestMessage")
           .populate("startBy")
           .populate("admins");
-        console.log("The chat", chat);
         return res.status(200).send({ chat });
       }
     }

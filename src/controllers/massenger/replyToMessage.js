@@ -3,9 +3,7 @@ const replyToMessage = async (req, res) => {
   const senderId = req.user.user._id;
   const { message,  conversationId,  messageId, type, imageUrl } = req.body;
   try {
-    const getReply = async (_id) => {
-      
-    };
+
    const newReply = new Reply({
     type,
     imageUrl,
