@@ -9,9 +9,11 @@ const removeConversation = require("./removeConversation");
 const replyToMessage = require("./replyToMessage");
 const sendImage = require("./sendImage");
 const sendMessage = require("./sendMessage");
+const udpateUserInConversation = require("./updateUserInConversation");
 
 module.exports = {
   getFriends,
+  udpateUserInConversation, 
   sendMessage,
   getMessage,
   sendImage,

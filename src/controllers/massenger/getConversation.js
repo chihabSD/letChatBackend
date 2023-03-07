@@ -10,6 +10,9 @@ const getConversation = async (req, res) => {
       .populate("latestMessage")
       .populate("startBy")
       .populate("admins").
+      populate("members.user").
+
+      
       sort({createdAt:-1 })
     let messages = await Message.find({ conversationId: chats[0]._id })
       .populate("conversationId")

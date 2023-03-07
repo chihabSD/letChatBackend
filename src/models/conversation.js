@@ -7,6 +7,12 @@ const conversationSchema = mongoose.Schema(
       enum: ["private", "group"],
       default: "private",
     },
+    members: [
+      {
+        role: { type: String, enum: ["user", "admin"], default: "user" },
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      },
+    ],
     users: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -14,11 +20,11 @@ const conversationSchema = mongoose.Schema(
       },
     ],
     groupPic: {
-      type:String, 
-    }, 
+      type: String,
+    },
     groupName: {
-      type:String, 
-    }, 
+      type: String,
+    },
     admins: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -41,4 +47,3 @@ const conversationSchema = mongoose.Schema(
 );
 
 module.exports = mongoose.model("Conversation", conversationSchema);
-

@@ -2,6 +2,13 @@ const Conversation = require("../../models/conversation");
 const addToChatList = async (req, res) => {
   const senderId = req.user.user._id;
 
+  // members: [
+  //   {
+  //     role: { type: String, enum: ["user", "admin"], default: "user" },
+  //     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  //   },
+  // ],
+
   const { users, groupName, isGroup } = req.body;
   try {
     if (isGroup) {
@@ -9,9 +16,18 @@ const addToChatList = async (req, res) => {
         type: "group",
         groupName,
         users: users.map((user) => user._id),
+        admins: users.map((user) => user._id),
+
         startBy: senderId,
       });
 
+      let members = [];
+      users.map((user) => {
+        members.push({ user: user._id, role: "user" });
+      });
+      group.members = [...members];
+
+      group.members.unshift({ user: senderId, role: "admin" });
       group.users.unshift(senderId);
       group.admins.unshift(senderId);
       const saved = await group.save();
@@ -20,7 +36,8 @@ const addToChatList = async (req, res) => {
           .populate("users")
           .populate("latestMessage")
           .populate("startBy")
-          .populate("admins");
+          .populate("admins")
+          .populate("members.user");
         return res.status(200).send({ chat });
       }
     }
