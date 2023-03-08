@@ -2,30 +2,45 @@ const Message = require("../../models/message");
 const Conversation = require("../../models/conversation");
 const sendMessage = async (req, res) => {
   const senderId = req.user.user._id;
-  const { senderName,conversationId,  receiverId, message, type, imageUrl } = req.body;
+  const {
+    conversationId,
+    receivers,
+    message,
+    type,
+    conversationsType,
+    imageUrl,
+  } = req.body;
   try {
-    const insertMessage = await Message.create({
-      senderName,
-      type, imageUrl, 
-      senderId,
-      message, 
-      receiverId,
-      conversationId
-    });
+    if (conversationsType === "group") {
+      const newMessage = new Message({
+        type,
+        imageUrl,
+        senderId,
+        message,
+        isGroupMessage: conversationsType === 'group' && true,
+        conversationId,
+      });
 
+      let members = [];
+      receivers.map((user) => {
+        members.push({ user: user._id });
+      });
+      newMessage.receivers = [...members];
 
-    // add this message to conversation
+      const saved = await newMessage.save();
 
-    const conversation  = await Conversation.findOne({ _id:  conversationId });
-    // latestMessage: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "Message",
-    // },
-    conversation.latestMessage = insertMessage._id
+      if (saved) {
+        const conversation = await Conversation.findOne({
+          _id: conversationId,
+        });
+        conversation.latestMessage = saved._id;
 
-    conversation.save()
+        conversation.save();
 
-    return res.status(200).send({ message:insertMessage });
+        return res.status(200).send({ message: saved });
+      }
+
+    }
   } catch (e) {
     console.log(e);
   }

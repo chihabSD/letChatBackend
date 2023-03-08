@@ -2,6 +2,16 @@ const mongoose = require("mongoose");
 
 const replySchema = mongoose.Schema(
   {
+    receivers: [
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
+      },
+    ],
+    
     messageId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Message",

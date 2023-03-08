@@ -8,10 +8,19 @@ const messageSchema = mongoose.Schema(
       required: true,
     },
 
+    receivers: [
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
+      },
+    ],
     receiverId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      // required: true,
     },
     imageUrl: {
       type: String,
@@ -37,6 +46,11 @@ const messageSchema = mongoose.Schema(
       default: false,
     },
 
+    isGroupMessage: {
+      type: Boolean,
+      default: false,
+    },
+
     type: {
       type: String,
       enum: ["text", "image"],
@@ -46,10 +60,9 @@ const messageSchema = mongoose.Schema(
     deletedBy: [
       {
         by: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-        on:  {type: Date, default: Date.now},
+        on: { type: Date, default: Date.now },
       },
     ],
-
 
     reactions: {
       reactions: [
@@ -59,7 +72,6 @@ const messageSchema = mongoose.Schema(
         },
       ],
     },
-
   },
   { timestamps: true }
 );

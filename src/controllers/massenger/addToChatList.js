@@ -2,14 +2,7 @@ const Conversation = require("../../models/conversation");
 const addToChatList = async (req, res) => {
   const senderId = req.user.user._id;
 
-  // members: [
-  //   {
-  //     role: { type: String, enum: ["user", "admin"], default: "user" },
-  //     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  //   },
-  // ],
-
-  const { users, groupName, isGroup } = req.body;
+  const { users, groupName, isGroup, receiverId } = req.body;
   try {
     if (isGroup) {
       const group = new Conversation({
@@ -49,10 +42,23 @@ const addToChatList = async (req, res) => {
         startBy: senderId,
       });
       chats.users.push(senderId, receiverId);
-      chats.save();
-      return res.status(200).send({ chats });
+      chats.members.push({ user: senderId }, { user: receiverId });
+
+
+      const saved = await chats.save();
+      if (saved) {
+        const chat = await Conversation.findOne({ _id: saved._id })
+          .populate("users")
+          .populate("latestMessage")
+          .populate("startBy")
+          .populate("admins")
+          .populate("members.user");
+        return res.status(200).send({ chat });
+      }
+
+      // return res.status(200).send({ chat: chats });
     } else {
-      return res.status(200).send({ chats });
+      return res.status(200).send({ chat: chats });
     }
   } catch (e) {
     console.log(e);

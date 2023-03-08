@@ -3,8 +3,10 @@ const Message = require("../../models/message");
 const Reply = require("../../models/reply");
 
 const getConversation = async (req, res) => {
+
   const senderId = req.user.user._id;
   try {
+
     const chats = await Conversation.find({ users: senderId })
       .populate("users")
       .populate("latestMessage")
@@ -25,6 +27,7 @@ const getConversation = async (req, res) => {
       .populate("senderId")
       .populate("conversationId");
 
+      console.log(replies.length, messages.length, chats.length);
     return res.status(200).send({ chats, messages, replies });
     // return res.status(200).send({ chats:[]});
   } catch (e) {
