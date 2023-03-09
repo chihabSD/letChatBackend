@@ -11,6 +11,8 @@ const conversationSchema = mongoose.Schema(
       {
         role: { type: String, enum: ["user", "admin"], default: "user" },
         user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        isBlocked: { type: Boolean, default: false },
+        isLeft: { type: Boolean, default: false },
       },
     ],
     users: [

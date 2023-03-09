@@ -11,7 +11,6 @@ const sendMessage = async (req, res) => {
     imageUrl,
   } = req.body;
   try {
-    if (conversationsType === "group") {
       const newMessage = new Message({
         type,
         imageUrl,
@@ -40,7 +39,6 @@ const sendMessage = async (req, res) => {
         return res.status(200).send({ message: saved });
       }
 
-    }
   } catch (e) {
     console.log(e);
   }

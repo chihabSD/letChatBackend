@@ -12,6 +12,7 @@ const {
   findUserByUserName,
   removeConversation,
   udpateUserInConversation,
+  existConversation,
 } = require("../controllers/massenger");
 
 const verifyToken = require("../middleware/verifyToken");
@@ -44,6 +45,7 @@ router.get("/messanger/search-user/:keyword", verifyToken, findUserByUserName);
 
 // CONVERSATION
 router.put("/messanger/conversation/update-user/:_id", verifyToken, udpateUserInConversation);
+router.put("/messanger/conversation/exist-conversation/:_id", verifyToken, existConversation);
 
 router.delete(
   "/messanger/delete-conversation/:_id",

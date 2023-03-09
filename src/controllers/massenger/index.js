@@ -8,6 +8,7 @@ const reactToMessage = require("./reactToMessage");
 const removeConversation = require("./removeConversation");
 const replyToMessage = require("./replyToMessage");
 const sendImage = require("./sendImage");
+const existConversation = require('./exitConersation')
 const sendMessage = require("./sendMessage");
 const udpateUserInConversation = require("./updateUserInConversation");
 
@@ -23,5 +24,5 @@ module.exports = {
   getConversation,
   reactToMessage,
   findUserByUserName
-,removeConversation
+,removeConversation, existConversation
 };
