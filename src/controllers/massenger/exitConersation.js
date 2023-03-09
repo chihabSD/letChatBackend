@@ -24,7 +24,9 @@ const existConversation = async (req, res) => {
       filteredArray[randomIndex].role = "admin";
 
       // shif admins to the top of array
-    
+      // filteredArray.some((item, index) => {
+      //   item.role == 'admin' && filteredArray.unshift(filteredArray.splice(index, 1)[0])
+      // })
 
       // add the new users to the origianl array
       conversation.members = [...filteredArray];
@@ -58,7 +60,7 @@ const existConversation = async (req, res) => {
           .populate("startBy")
           .populate("admins")
           .populate("members.user");
-        return res.status(200).send({ chat });
+          return res.status(200).send({ conversation: chat });
       }
       return;
     }
@@ -75,7 +77,7 @@ const existConversation = async (req, res) => {
         .populate("startBy")
         .populate("admins")
         .populate("members.user");
-      return res.status(200).send({ chat });
+      return res.status(200).send({ conversation: chat });
     }
   } catch (e) {
     console.log(e);
