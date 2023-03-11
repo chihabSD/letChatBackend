@@ -4,8 +4,7 @@ var mongoose = require("mongoose");
 const udpateUserInConversation = async (req, res) => {
   const senderId = req.user.user._id;
   const { _id } = req.params;
-  const { makeAdmin, user, users, updateType } = req.body;
-  // updateType:'addBack',
+  const { user, users, updateType } = req.body;
 
   try {
     const conversation = await Conversation.findOne({ _id });
@@ -23,31 +22,16 @@ const udpateUserInConversation = async (req, res) => {
 
     // Remove user from the group
     if (updateType === "removeUser") {
-  
-      var id = mongoose.Types.ObjectId(user);
-    // let removed =   conversation.members.map((user) => user.user != id);
-    var id = mongoose.Types.ObjectId(user);
-    let oldMembers = conversation.members
+      let objIndex = conversation.members.findIndex((obj) => obj.user == user);
 
-    let objIndex = conversation.members.findIndex((obj) => obj.user == user);
- 
+      conversation.members.splice(objIndex, 1);
 
-
-    conversation.members.splice(objIndex, 1);
-    
-      console.log(objIndex);
-      const saved = await conversation.save();
-
-      if (saved) {
-        const r = await Conversation.findOne({ _id })
-          .populate("users")
-          .populate("latestMessage")
-          .populate("startBy")
-          .populate("admins")
-          .populate("members.user");
-
-        return res.status(200).send({ conversation: r });
-      }
+      conversation.save((err, result) => {
+        if (err) return console.log(err);
+        if (result) {
+          getResult();
+        }
+      });
 
       return;
     }
@@ -61,41 +45,29 @@ const udpateUserInConversation = async (req, res) => {
       let oldConversationMember = conversation.members;
       conversation.members = [...members, ...oldConversationMember];
 
-      const saved = await conversation.save();
-
-      if (saved) {
-        const r = await Conversation.findOne({ _id })
-          .populate("users")
-          .populate("latestMessage")
-          .populate("startBy")
-          .populate("admins")
-          .populate("members.user");
-
-        return res.status(200).send({ conversation: r });
-      }
+      conversation.save((err, result) => {
+        if (err) return console.log(err);
+        if (result) {
+          getResult();
+        }
+      });
 
       return;
     }
-
     // user add himself back
     if (updateType === "addBack") {
       objIndex = conversation.members.findIndex((obj) => obj.user == senderId);
       conversation.members[objIndex].isLeft = false;
 
-      let saved = await conversation.save();
-      if (saved) {
-        const chat = await Conversation.findOne({ _id: saved._id })
-          .populate("users")
-          .populate("latestMessage")
-          .populate("startBy")
-          .populate("admins")
-          .populate("members.user");
-        return res.status(200).send({ conversation: chat });
-      }
+      conversation.save((err, result) => {
+        if (err) return console.log(err);
+        if (result) {
+          getResult();
+        }
+      });
 
       return;
     }
-
     // Make user admin
     if (updateType === "makeAdmin") {
       conversation.admins.splice(1, 0, user);

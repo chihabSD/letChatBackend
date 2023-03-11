@@ -26,7 +26,6 @@ const getMessage = async (req, res) => {
 
     // let messages = await Message.find({conversationId}).populate('conversationId').populate('senderId').populate('receiverId');
 
-    console.log("get message", replies.length);
     return res.status(200).send({ messages, replies });
   } catch (e) {
     console.log(e);

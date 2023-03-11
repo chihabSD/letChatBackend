@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const logger = require("morgan");
+
 const bodyParser = require("body-parser");
 const cors = require('cors');
 const fs = require('fs')
@@ -41,5 +42,7 @@ app.use(express.static('public'));
 app.use('/images', express.static('images'));
 const dirPath = path.resolve(__dirname, './routes')
 fs.readdirSync(dirPath).map((r) => app.use('/api', require('./routes/'+r)))
+
+
 
 module.exports = app;
